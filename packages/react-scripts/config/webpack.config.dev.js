@@ -93,7 +93,11 @@ module.exports = {
     alias: {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-      'react-native': 'react-native-web'
+      'react-native': 'react-native-web',
+      // Useful to import modules from 'src'.
+      '~': paths.appSrc,
+      // This path will be changed in the 'npm run deploy' process.
+      '~customize': path.join(paths.appSrc, 'customize/index')
     }
   },
   resolveLoader: {
