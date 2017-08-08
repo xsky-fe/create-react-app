@@ -17,6 +17,6 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^5.0.3",
     "eslint-plugin-react": "^7.0.1",
-    "eslint-plugin-wizard": "git://github.com/xsky-fe/eslint-plugin-wizard.git"
+    "eslint-plugin-wizard": "^0.1.0"
   }
 }
