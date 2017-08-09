@@ -1,8 +1,8 @@
 {
-  "name": "eslint-config-react-app",
-  "version": "1.0.5",
+  "name": "eslint-config-react-app-wizard",
+  "version": "1.0.6",
   "description": "ESLint configuration used by Create React App",
-  "repository": "facebookincubator/create-react-app",
+  "repository": "xsky-fe/create-react-app",
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/facebookincubator/create-react-app/issues"
