@@ -253,7 +253,15 @@ module.exports = {
           },
           {
             test: /error.html$/,
-            loader:require.resolve('html-loader'),
+            loader: require.resolve('html-loader'),
+          },
+          // "po" loader convert po file to json, used by i18n module.
+          {
+            test: /\.po$/,
+            use: [
+              require.resolve('json-loader'),
+              require.resolve('po-loader'),
+            ],
           },
           // "file" loader makes sure assets end up in the `build` folder.
           // When you `import` an asset, you get its filename.
