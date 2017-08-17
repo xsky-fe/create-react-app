@@ -276,7 +276,7 @@ module.exports = {
     new InterpolateHtmlPlugin(env.raw),
     new CopyWebpackPlugin([
       {
-        from: path.join(paths.appPublic, 'javascripts/browser-ua.js'),
+        from: path.join(paths.appAsset, 'javascripts/browser-ua.js'),
         to: path.join(paths.appBuild, 'static/js/browser-ua.js'),
       }
     ]),
