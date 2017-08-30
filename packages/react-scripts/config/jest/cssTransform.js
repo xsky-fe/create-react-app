@@ -14,7 +14,7 @@
 
 module.exports = {
   process() {
-    return 'module.exports = { ":root": {} };';    
+    return 'module.exports = { ":root": {} };';
   },
   getCacheKey() {
     // The output is always the same.
