@@ -24,3 +24,25 @@ require('whatwg-fetch');
 // Object.assign() is commonly used with React.
 // It will use the native implementation if it's present and isn't buggy.
 Object.assign = require('object-assign');
+
+// Polyfill localStorage in jsdom environment
+if (typeof localStorage === 'undefined') {
+  var localStorageMock = (function() {
+    var store = {};
+    return {
+      getItem: function(key) {
+        return store[key];
+      },
+      setItem: function(key, value) {
+        store[key] = value.toString();
+      },
+      clear: function() {
+        store = {};
+      },
+      removeItem: function(key) {
+        delete store[key];
+      }
+    };
+  })();
+  Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+}
