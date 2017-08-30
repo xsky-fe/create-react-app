@@ -10,6 +10,7 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 const chalk = require('chalk');
 const paths = require('../../config/paths');
 
@@ -39,9 +40,12 @@ module.exports = (resolve, rootDir, isEjecting) => {
       '^.+\\.css$': resolve('config/jest/cssTransform.js'),
       '^(?!.*\\.(js|jsx|css|json)$)': resolve('config/jest/fileTransform.js'),
     },
-    transformIgnorePatterns: ['[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$'],
+    transformIgnorePatterns: ['[/\\\\]node_modules[/\\\\](?!redux-demon).+\\.(js|jsx)$'],
     moduleNameMapper: {
       '^react-native$': 'react-native-web',
+      '^~customize$': path.join(paths.appSrc, '/customize'),
+      '^~/(.+)': path.join(paths.appSrc, '/$1'),
+      '^!!css-object-loader!~/style/variables.css$': path.join(paths.appSrc, '/style/variables.css'),
     },
     moduleFileExtensions: ['web.js', 'js', 'json', 'web.jsx', 'jsx', 'node'],
   };
