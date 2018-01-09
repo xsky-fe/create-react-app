@@ -45,7 +45,7 @@ module.exports = (resolve, rootDir, isEjecting) => {
       '^react-native$': 'react-native-web',
       '^~customize$': path.join(paths.appSrc, '/customize'),
       '^~/(.+)': path.join(paths.appSrc, '/$1'),
-      '^!!css-object-loader!~/style/variables.css$': path.join(paths.appSrc, '/style/variables.css'),
+      '^!!css-object-loader!~/(.+)/variables.css$': path.join(paths.appSrc, '/$1/variables.css'),
     },
     moduleFileExtensions: ['web.js', 'js', 'json', 'web.jsx', 'jsx', 'node'],
   };
