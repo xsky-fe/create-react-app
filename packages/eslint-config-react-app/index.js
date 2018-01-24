@@ -297,5 +297,6 @@ module.exports = {
     // https://github.com/xsky-fe/eslint-plugin-wizard
     'wizard/use-t-function': 'warn',
     'wizard/no-unused-props': 'warn',
+    'wizard/nightwatch-execute': 'error',
   },
 };
