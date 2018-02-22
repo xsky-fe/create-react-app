@@ -45,4 +45,5 @@ if (typeof localStorage === 'undefined') {
     };
   })();
   Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+  Object.defineProperty(window.navigator, 'language', { value: '"zh"' });
 }
