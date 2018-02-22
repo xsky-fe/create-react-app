@@ -38,6 +38,8 @@ module.exports = (resolve, rootDir, isEjecting) => {
         ? '<rootDir>/node_modules/babel-jest'
         : resolve('config/jest/babelTransform.js'),
       '^.+\\.css$': resolve('config/jest/cssTransform.js'),
+      '^.+\\.po$': resolve('config/jest/poTransform.js'),
+      // fileTransform 必须放在最后
       '^(?!.*\\.(js|jsx|css|json)$)': resolve('config/jest/fileTransform.js'),
     },
     transformIgnorePatterns: ['[/\\\\]node_modules[/\\\\](?!redux-demon).+\\.(js|jsx)$'],
@@ -46,7 +48,6 @@ module.exports = (resolve, rootDir, isEjecting) => {
       '^~customize$': path.join(paths.appSrc, '/customize'),
       '^~/(.+)': path.join(paths.appSrc, '/$1'),
       '^!!css-object-loader!~/(.+)/variables.css$': path.join(paths.appSrc, '/$1/variables.css'),
-      '\\.po$': '<rootDir>/__mocks__/poMock.js',
     },
     moduleFileExtensions: ['web.js', 'js', 'json', 'web.jsx', 'jsx', 'node'],
   };
