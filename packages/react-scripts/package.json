@@ -1,6 +1,6 @@
 {
   "name": "react-scripts-wizard",
-  "version": "1.0.11-13",
+  "version": "1.0.11-14",
   "description": "Configuration and scripts for Create React App.",
   "repository": "xsky-fe/create-react-app",
   "license": "BSD-3-Clause",
@@ -35,7 +35,7 @@
     "css-loader": "0.28.4",
     "dotenv": "4.0.0",
     "eslint": "4.4.1",
-    "eslint-config-react-app-wizard": "^2.0.0-2",
+    "eslint-config-react-app-wizard": "^2.0.0-3",
     "eslint-loader": "1.9.0",
     "eslint-plugin-flowtype": "2.35.0",
     "eslint-plugin-import": "2.7.0",

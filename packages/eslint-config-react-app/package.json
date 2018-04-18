@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-react-app-wizard",
-  "version": "2.0.0-2",
+  "version": "2.0.0-3",
   "description": "ESLint configuration used by Create React App",
   "repository": "xsky-fe/create-react-app",
   "license": "BSD-3-Clause",
@@ -17,6 +17,6 @@
     "eslint-plugin-import": "^2.6.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.1.0",
-    "eslint-plugin-wizard": "^0.1.2"
+    "eslint-plugin-wizard": "^0.1.3"
   }
 }

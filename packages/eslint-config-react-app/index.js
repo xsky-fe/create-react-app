@@ -298,5 +298,6 @@ module.exports = {
     'wizard/use-t-function': 'warn',
     'wizard/no-unused-props': 'warn',
     'wizard/nightwatch-execute': 'error',
+    'wizard/action-checker': 'warn',
   },
 };
