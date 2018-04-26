@@ -245,7 +245,10 @@ module.exports = {
                         ],
                       },
                     },
-                    require.resolve('sass-loader'),
+                    {
+                      loader: require.resolve('sass-loader'),
+                      options: { precision: 8 },
+                    },
                   ],
                 },
                 extractTextPluginOptions
