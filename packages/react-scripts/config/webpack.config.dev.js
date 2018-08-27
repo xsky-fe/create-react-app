@@ -180,6 +180,10 @@ module.exports = {
             include: [
               paths.appSrc,
               path.join(paths.appNodeModules, 'redux-demon'),
+              path.join(paths.appNodeModules, 'ip-regex'),
+              path.join(paths.appNodeModules, 'cidr-regex'),
+              path.join(paths.appNodeModules, 'is-ip'),
+              path.join(paths.appNodeModules, 'is-cidr'),
             ],
             loader: require.resolve('babel-loader'),
             options: {
