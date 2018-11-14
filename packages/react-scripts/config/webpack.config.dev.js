@@ -68,7 +68,11 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
         // https://github.com/facebook/create-react-app/issues/2677
         ident: 'postcss',
         plugins: () => [
+          require('postcss-import'),
           require('postcss-flexbugs-fixes'),
+          require('postcss-custom-properties'),
+          require('postcss-nested'),
+          require('postcss-color-function'),
           require('postcss-preset-env')({
             autoprefixer: {
               flexbox: 'no-2009',
@@ -108,7 +112,7 @@ module.exports = {
     // require.resolve('webpack/hot/dev-server'),
     require.resolve('react-dev-utils/webpackHotDevClient'),
     // Shipping babel-polyfill also
-    // require.resolve('./babel-polyfill'),
+    require.resolve('./babel-polyfill'),
     // Finally, this is your app's code:
     paths.appIndexJs,
     // We include the app code last so that if there is a runtime error during

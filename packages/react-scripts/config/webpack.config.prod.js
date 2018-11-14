@@ -92,7 +92,11 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
         // https://github.com/facebook/create-react-app/issues/2677
         ident: 'postcss',
         plugins: () => [
+          require('postcss-import'),
           require('postcss-flexbugs-fixes'),
+          require('postcss-custom-properties'),
+          require('postcss-nested'),
+          require('postcss-color-function'),
           require('postcss-preset-env')({
             autoprefixer: {
               flexbox: 'no-2009',
