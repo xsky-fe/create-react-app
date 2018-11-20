@@ -96,12 +96,14 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
           require('postcss-flexbugs-fixes'),
           require('postcss-custom-properties'),
           require('postcss-nested'),
-          require('postcss-color-function'),
           require('postcss-preset-env')({
             autoprefixer: {
               flexbox: 'no-2009',
             },
             stage: 3,
+            features: {
+              'color-mod-function': { unresolved: 'warn' },
+            },
           }),
         ],
         sourceMap: shouldUseSourceMap,
