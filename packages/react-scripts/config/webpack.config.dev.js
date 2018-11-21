@@ -86,7 +86,12 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
     },
   ];
   if (preProcessor) {
-    loaders.push(require.resolve(preProcessor));
+    loaders.push({
+      loader: require.resolve(preProcessor),
+      options: {
+        precision: 8,
+      },
+    });
   }
   return loaders;
 };
