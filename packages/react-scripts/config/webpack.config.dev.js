@@ -217,7 +217,10 @@ module.exports = {
                   plugins: () => [
                     require('postcss-import'),
                     require('postcss-flexbugs-fixes'),
-                    require('postcss-custom-properties'),
+                    // https://github.com/postcss/postcss-custom-properties#preserve
+                    require('postcss-custom-properties')({
+                      'preserve': false,
+                    }),
                     require('postcss-nested'),
                     require('postcss-color-function'),
                     autoprefixer({
