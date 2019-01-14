@@ -36,8 +36,8 @@ module.exports = (resolve, rootDir, isEjecting) => {
       : require.resolve('jest-pnp-resolver'),
     setupFiles: [
       isEjecting
-        ? 'react-app-polyfill/jsdom'
-        : require.resolve('react-app-polyfill/jsdom'),
+        ? 'react-app-polyfill-wizard/jsdom'
+        : require.resolve('react-app-polyfill-wizard/jsdom'),
     ],
 
     setupTestFrameworkScriptFile: setupTestsFile,
