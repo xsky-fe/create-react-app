@@ -189,6 +189,7 @@ module.exports = {
               path.join(paths.appNodeModules, 'cidr-regex'),
               path.join(paths.appNodeModules, 'is-ip'),
               path.join(paths.appNodeModules, 'is-cidr'),
+              path.join(paths.appNodeModules, 'node-rsa'),
             ],
             loader: require.resolve('babel-loader'),
             options: {
