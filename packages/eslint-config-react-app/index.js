@@ -28,7 +28,7 @@ module.exports = {
 
   parser: 'babel-eslint',
 
-  plugins: ['import', 'flowtype', 'jsx-a11y', 'react', 'react-hooks'],
+  plugins: ['import', 'flowtype', 'jsx-a11y', 'react', 'react-hooks', 'wizard'],
 
   env: {
     browser: true,
@@ -291,5 +291,9 @@ module.exports = {
     'flowtype/define-flow-type': 'warn',
     'flowtype/require-valid-file-annotation': 'warn',
     'flowtype/use-flow-type': 'warn',
+
+    // https://github.com/xsky-fe/eslint-plugin-wizard
+    'wizard/use-t-function': 'warn',
+    'wizard/no-unused-props': 'warn',
   },
 };
