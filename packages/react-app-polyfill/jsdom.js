@@ -12,3 +12,25 @@ if (typeof window !== 'undefined') {
   // fetch() polyfill for making API calls.
   require('whatwg-fetch');
 }
+
+// Polyfill localStorage in jsdom environment
+if (typeof localStorage === 'undefined') {
+  var localStorageMock = (function() {
+    var store = {};
+    return {
+      getItem: function(key) {
+        return store[key];
+      },
+      setItem: function(key, value) {
+        store[key] = value.toString();
+      },
+      clear: function() {
+        store = {};
+      },
+      removeItem: function(key) {
+        delete store[key];
+      }
+    };
+  })();
+  Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+}

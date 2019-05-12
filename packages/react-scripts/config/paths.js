@@ -11,6 +11,7 @@
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
+const oem = require('./oem');
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebook/create-react-app/issues/637
@@ -77,9 +78,11 @@ const resolveModule = (resolveFn, filePath) => {
 module.exports = {
   dotenv: resolveApp('.env'),
   appPath: resolveApp('.'),
-  appBuild: resolveApp('build'),
+  appBuild: resolveApp(path.join('dist', oem.reactAppOem)),
   appPublic: resolveApp('public'),
+  appAsset: resolveApp('asset'),
   appHtml: resolveApp('public/index.html'),
+  errorHtml: resolveApp('asset/error.html'),
   appIndexJs: resolveModule(resolveApp, 'src/index'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
@@ -100,9 +103,11 @@ const resolveOwn = relativePath => path.resolve(__dirname, '..', relativePath);
 module.exports = {
   dotenv: resolveApp('.env'),
   appPath: resolveApp('.'),
-  appBuild: resolveApp('build'),
+  appBuild: resolveApp(path.join('dist', oem.reactAppOem)),
   appPublic: resolveApp('public'),
+  appAsset: resolveApp('asset'),
   appHtml: resolveApp('public/index.html'),
+  errorHtml: resolveApp('asset/error.html'),
   appIndexJs: resolveModule(resolveApp, 'src/index'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
@@ -135,9 +140,11 @@ if (
   module.exports = {
     dotenv: resolveOwn('template/.env'),
     appPath: resolveApp('.'),
-    appBuild: resolveOwn('../../build'),
+    appBuild: resolveApp(path.join('../../dist', oem.reactAppOem)),
     appPublic: resolveOwn('template/public'),
+    appAsset: resolveOwn('template/asset'),
     appHtml: resolveOwn('template/public/index.html'),
+    errorHtml: resolveOwn('template/asset/error.html'),
     appIndexJs: resolveModule(resolveOwn, 'template/src/index'),
     appPackageJson: resolveOwn('package.json'),
     appSrc: resolveOwn('template/src'),
