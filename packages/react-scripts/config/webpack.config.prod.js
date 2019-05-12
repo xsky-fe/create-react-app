@@ -24,16 +24,10 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const paths = require('./paths');
 const oem = require('./oem');
 const getClientEnvironment = require('./env');
-const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt');
-const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-// @remove-on-eject-begin
-const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
-// @remove-on-eject-end
+const oem = require('./oem');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -134,11 +128,12 @@ module.exports = {
   bail: true,
   // We generate sourcemaps in production. This is slow but gives good results.
   // You can exclude the *.map files from the build during deployment.
-  devtool: shouldUseSourceMap ? 'source-map' : false,
-  // In production, we only want to load the app code.
+  devtool: 'source-map',
+  // In production, we only want to load the polyfills and the app code.
   entry: [
+    require.resolve('./polyfills'),
     require.resolve('./babel-polyfill'),
-    paths.appIndexJs
+    paths.appIndexJs,
   ],
   output: {
     // The build folder.
@@ -323,16 +318,11 @@ module.exports = {
           // Process application JS with Babel.
           // The preset includes JSX, Flow, TypeScript and some ESnext features.
           {
-            test: /\.(js|mjs|jsx|ts|tsx)$/,
+            test: /\.(js|jsx)$/,
             include: [
               paths.appSrc,
               path.join(paths.appNodeModules, 'redux-demon'),
-              path.join(paths.appNodeModules, 'ip-regex'),
-              path.join(paths.appNodeModules, 'cidr-regex'),
-              path.join(paths.appNodeModules, 'is-ip'),
-              path.join(paths.appNodeModules, 'is-cidr'),
             ],
-
             loader: require.resolve('babel-loader'),
             options: {
               customize: require.resolve(
@@ -412,43 +402,48 @@ module.exports = {
           // files. If you use code splitting, async bundles will have their own separate CSS chunk file.
           // By default we support CSS Modules with the extension .module.css
           {
-            test: cssRegex,
-            exclude: cssModuleRegex,
-            loader: getStyleLoaders({
-              importLoaders: 1,
-              sourceMap: shouldUseSourceMap,
-            }),
-            // Don't consider CSS imports dead code even if the
-            // containing package claims to have no side effects.
-            // Remove this when webpack adds a warning or an error for this.
-            // See https://github.com/webpack/webpack/issues/6571
-            sideEffects: true,
-          },
-          // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
-          // using the extension .module.css
-          {
-            test: cssModuleRegex,
-            loader: getStyleLoaders({
-              importLoaders: 1,
-              sourceMap: shouldUseSourceMap,
-              modules: true,
-              getLocalIdent: getCSSModuleLocalIdent,
-            }),
-          },
-          // Opt-in support for SASS. The logic here is somewhat similar
-          // as in the CSS routine, except that "sass-loader" runs first
-          // to compile SASS files into CSS.
-          // By default we support SASS Modules with the
-          // extensions .module.scss or .module.sass
-          {
-            test: sassRegex,
-            exclude: sassModuleRegex,
-            loader: getStyleLoaders(
-              {
-                importLoaders: 2,
-                sourceMap: shouldUseSourceMap,
-              },
-              'sass-loader'
+            test: /\.css$/,
+            loader: ExtractTextPlugin.extract(
+              Object.assign(
+                {
+                  fallback: require.resolve('style-loader'),
+                  use: [
+                    {
+                      loader: require.resolve('css-loader'),
+                      options: {
+                        importLoaders: 1,
+                        minimize: true,
+                        sourceMap: true,
+                      },
+                    },
+                    {
+                      loader: require.resolve('postcss-loader'),
+                      options: {
+                        // Necessary for external CSS imports to work
+                        // https://github.com/facebookincubator/create-react-app/issues/2677
+                        ident: 'postcss',
+                        plugins: () => [
+                          require('postcss-import'),
+                          require('postcss-flexbugs-fixes'),
+                          require('postcss-custom-properties'),
+                          require('postcss-nested'),
+                          require('postcss-color-function'),
+                          autoprefixer({
+                            browsers: [
+                              '>1%',
+                              'last 4 versions',
+                              'Firefox ESR',
+                              'not ie < 9', // React doesn't support IE8 anyway
+                            ],
+                            flexbox: 'no-2009',
+                          }),
+                        ],
+                      },
+                    },
+                  ],
+                },
+                extractTextPluginOptions
+              )
             ),
             // Don't consider CSS imports dead code even if the
             // containing package claims to have no side effects.
@@ -482,6 +477,18 @@ module.exports = {
             test: /error.html$/,
             loader:require.resolve('html-loader'),
           },
+          // "po" loader convert po file to json, used by i18n module.
+          {
+            test: /\.po$/,
+            use: [
+              require.resolve('json-loader'),
+              require.resolve('po-loader'),
+            ],
+          },
+          {
+            test: /error.html$/,
+            loader: require.resolve('html-loader'),
+          },
           // "file" loader makes sure assets end up in the `build` folder.
           // When you `import` an asset, you get its filename.
           // This loader doesn't use a "test" so it will catch all modules
@@ -504,9 +511,15 @@ module.exports = {
     ],
   },
   plugins: [
+    // Makes some environment variables available in index.html.
+    // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
+    // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    // In production, it will be an empty string unless you specify "homepage"
+    // in `package.json`, in which case it will be the pathname of that URL.
+    new InterpolateHtmlPlugin(env.raw),
     new CopyWebpackPlugin([
       {
-        from: path.join(paths.appAsset, 'javascripts/browser-ua.js'),
+        from: path.join(paths.appPublic, 'javascripts/browser-ua.js'),
         to: path.join(paths.appBuild, 'static/js/browser-ua.js'),
       }
     ]),
@@ -547,19 +560,6 @@ module.exports = {
         minifyURLs: true
       }
     }),
-    // Inlines the webpack runtime script. This script is too small to warrant
-    // a network request.
-    shouldInlineRuntimeChunk &&
-      new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
-    // Makes some environment variables available in index.html.
-    // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
-    // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    // In production, it will be an empty string unless you specify "homepage"
-    // in `package.json`, in which case it will be the pathname of that URL.
-    new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
-    // This gives some necessary context to module not found errors, such as
-    // the requesting resource.
-    new ModuleNotFoundPlugin(paths.appPath),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
     // It is absolutely essential that NODE_ENV was set to production here.

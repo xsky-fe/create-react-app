@@ -19,17 +19,9 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 const oem = require('./oem');
-const ManifestPlugin = require('webpack-manifest-plugin');
-const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt');
-const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-// @remove-on-eject-begin
-const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
-// @remove-on-eject-end
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -121,8 +113,12 @@ module.exports = {
     // require.resolve('webpack-dev-server/client') + '?/',
     // require.resolve('webpack/hot/dev-server'),
     require.resolve('react-dev-utils/webpackHotDevClient'),
+    // We ship a few polyfills by default:
+    require.resolve('./polyfills'),
     // Shipping babel-polyfill also
     require.resolve('./babel-polyfill'),
+    // Errors should be considered fatal in development
+    require.resolve('react-error-overlay'),
     // Finally, this is your app's code:
     paths.appIndexJs,
     // We include the app code last so that if there is a runtime error during
@@ -253,14 +249,10 @@ module.exports = {
           // Process application JS with Babel.
           // The preset includes JSX, Flow, and some ESnext features.
           {
-            test: /\.(js|mjs|jsx|ts|tsx)$/,
+            test: /\.(js|jsx)$/,
             include: [
               paths.appSrc,
               path.join(paths.appNodeModules, 'redux-demon'),
-              path.join(paths.appNodeModules, 'ip-regex'),
-              path.join(paths.appNodeModules, 'cidr-regex'),
-              path.join(paths.appNodeModules, 'is-ip'),
-              path.join(paths.appNodeModules, 'is-cidr'),
             ],
             loader: require.resolve('babel-loader'),
             options: {
@@ -376,12 +368,39 @@ module.exports = {
             test: sassModuleRegex,
             use: getStyleLoaders(
               {
-                importLoaders: 2,
-                modules: true,
-                getLocalIdent: getCSSModuleLocalIdent,
+                loader: require.resolve('postcss-loader'),
+                options: {
+                  // Necessary for external CSS imports to work
+                  // https://github.com/facebookincubator/create-react-app/issues/2677
+                  ident: 'postcss',
+                  plugins: () => [
+                    require('postcss-import'),
+                    require('postcss-flexbugs-fixes'),
+                    require('postcss-custom-properties'),
+                    require('postcss-nested'),
+                    require('postcss-color-function'),
+                    autoprefixer({
+                      browsers: [
+                        '>1%',
+                        'last 4 versions',
+                        'Firefox ESR',
+                        'not ie < 9', // React doesn't support IE8 anyway
+                      ],
+                      flexbox: 'no-2009',
+                    }),
+                  ],
+                },
               },
               'sass-loader'
             ),
+          },
+          // "po" loader convert po file to json, used by i18n module.
+          {
+            test: /\.po$/,
+            use: [
+              require.resolve('json-loader'),
+              require.resolve('po-loader'),
+            ],
           },
           // "po" loader convert po file to json, used by i18n module.
           {
@@ -418,9 +437,14 @@ module.exports = {
     ],
   },
   plugins: [
+    // Makes some environment variables available in index.html.
+    // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
+    // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    // In development, this will be an empty string.
+    new InterpolateHtmlPlugin(env.raw),
     new CopyWebpackPlugin([
       {
-        from: path.join(paths.appAsset, 'javascripts/browser-ua.js'),
+        from: path.join(paths.appPublic, 'javascripts/browser-ua.js'),
         to: path.join(paths.appBuild, 'static/js/browser-ua.js'),
       }
     ]),
@@ -429,6 +453,12 @@ module.exports = {
       inject: true,
       template: paths.appHtml,
       title: `${oem.reactAppOem} Dashboard`,
+      favicon: path.join(paths.appSrc, 'customize', oem.reactAppOem, 'favicon.ico'),
+    }),
+    new HtmlWebpackPlugin({
+      inject: false,
+      filename: 'error.html',
+      template: paths.errorHtml,
       favicon: path.join(paths.appSrc, 'customize', oem.reactAppOem, 'favicon.ico'),
     }),
     new HtmlWebpackPlugin({
