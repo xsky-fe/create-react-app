@@ -72,7 +72,7 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
           require('postcss-flexbugs-fixes'),
           // https://github.com/postcss/postcss-custom-properties#preserve
           require('postcss-custom-properties')({
-            'preserve': false,
+            preserve: false,
           }),
           require('postcss-nested'),
           require('postcss-preset-env')({
@@ -222,7 +222,7 @@ module.exports = {
               eslintPath: require.resolve('eslint'),
               // @remove-on-eject-begin
               baseConfig: {
-                extends: [require.resolve('eslint-config-react-app-wizard')],
+                extends: [require.resolve('eslint-config-react-app')],
                 settings: { react: { version: '999.999.999' } },
               },
               ignore: false,
@@ -386,10 +386,7 @@ module.exports = {
           // "po" loader convert po file to json, used by i18n module.
           {
             test: /\.po$/,
-            use: [
-              require.resolve('json-loader'),
-              require.resolve('po-loader'),
-            ],
+            use: [require.resolve('json-loader'), require.resolve('po-loader')],
           },
           {
             test: /error.html$/,
@@ -422,20 +419,30 @@ module.exports = {
       {
         from: path.join(paths.appAsset, 'javascripts/browser-ua.js'),
         to: path.join(paths.appBuild, 'static/js/browser-ua.js'),
-      }
+      },
     ]),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
       title: `${oem.reactAppOem} Dashboard`,
-      favicon: path.join(paths.appSrc, 'customize', oem.reactAppOem, 'favicon.ico'),
+      favicon: path.join(
+        paths.appSrc,
+        'customize',
+        oem.reactAppOem,
+        'favicon.ico'
+      ),
     }),
     new HtmlWebpackPlugin({
       inject: false,
       filename: 'error.html',
       template: paths.errorHtml,
-      favicon: path.join(paths.appSrc, 'customize', oem.reactAppOem, 'favicon.ico'),
+      favicon: path.join(
+        paths.appSrc,
+        'customize',
+        oem.reactAppOem,
+        'favicon.ico'
+      ),
     }),
     // Makes some environment variables available in index.html.
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:

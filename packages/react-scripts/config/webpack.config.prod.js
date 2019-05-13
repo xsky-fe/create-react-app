@@ -96,7 +96,7 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
           require('postcss-flexbugs-fixes'),
           // https://github.com/postcss/postcss-custom-properties#preserve
           require('postcss-custom-properties')({
-            'preserve': false,
+            preserve: false,
           }),
           require('postcss-nested'),
           require('postcss-preset-env')({
@@ -136,10 +136,7 @@ module.exports = {
   // You can exclude the *.map files from the build during deployment.
   devtool: shouldUseSourceMap ? 'source-map' : false,
   // In production, we only want to load the app code.
-  entry: [
-    require.resolve('./babel-polyfill'),
-    paths.appIndexJs
-  ],
+  entry: [require.resolve('./babel-polyfill'), paths.appIndexJs],
   output: {
     // The build folder.
     path: paths.appBuild,
@@ -293,7 +290,7 @@ module.exports = {
               // TODO: consider separate config for production,
               // e.g. to enable no-console and no-debugger only in production.
               baseConfig: {
-                extends: [require.resolve('eslint-config-react-app-wizard')],
+                extends: [require.resolve('eslint-config-react-app')],
                 settings: { react: { version: '999.999.999' } },
               },
               ignore: false,
@@ -473,14 +470,11 @@ module.exports = {
           // "po" loader convert po file to json, used by i18n module.
           {
             test: /\.po$/,
-            use: [
-              require.resolve('json-loader'),
-              require.resolve('po-loader'),
-            ],
+            use: [require.resolve('json-loader'), require.resolve('po-loader')],
           },
           {
             test: /error.html$/,
-            loader:require.resolve('html-loader'),
+            loader: require.resolve('html-loader'),
           },
           // "file" loader makes sure assets end up in the `build` folder.
           // When you `import` an asset, you get its filename.
@@ -508,14 +502,19 @@ module.exports = {
       {
         from: path.join(paths.appAsset, 'javascripts/browser-ua.js'),
         to: path.join(paths.appBuild, 'static/js/browser-ua.js'),
-      }
+      },
     ]),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
       title: `${oem.reactAppOem} Dashboard`,
-      favicon: path.join(paths.appSrc, 'customize', oem.reactAppOem, 'favicon.ico'),
+      favicon: path.join(
+        paths.appSrc,
+        'customize',
+        oem.reactAppOem,
+        'favicon.ico'
+      ),
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -533,7 +532,12 @@ module.exports = {
       inject: false,
       template: paths.errorHtml,
       filename: 'error.html',
-      favicon: path.join(paths.appSrc, 'customize', oem.reactAppOem, 'favicon.ico'),
+      favicon: path.join(
+        paths.appSrc,
+        'customize',
+        oem.reactAppOem,
+        'favicon.ico'
+      ),
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -544,8 +548,8 @@ module.exports = {
         keepClosingSlash: true,
         minifyJS: true,
         minifyCSS: true,
-        minifyURLs: true
-      }
+        minifyURLs: true,
+      },
     }),
     // Inlines the webpack runtime script. This script is too small to warrant
     // a network request.
