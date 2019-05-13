@@ -8,6 +8,7 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 const chalk = require('react-dev-utils/chalk');
 const paths = require('../../config/paths');
 const modules = require('../../config/modules');
@@ -27,8 +28,8 @@ module.exports = (resolve, rootDir, isEjecting) => {
 
     setupFiles: [
       isEjecting
-        ? 'react-app-polyfill/jsdom'
-        : require.resolve('react-app-polyfill/jsdom'),
+        ? 'react-app-polyfill-wizard/jsdom'
+        : require.resolve('react-app-polyfill-wizard/jsdom'),
     ],
 
     setupFilesAfterEnv: setupTestsFile ? [setupTestsFile] : [],
@@ -42,18 +43,22 @@ module.exports = (resolve, rootDir, isEjecting) => {
         ? '<rootDir>/node_modules/babel-jest'
         : resolve('config/jest/babelTransform.js'),
       '^.+\\.css$': resolve('config/jest/cssTransform.js'),
+      '^.+\\.po$': resolve('config/jest/poTransform.js'),
       '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': resolve(
         'config/jest/fileTransform.js'
       ),
     },
     transformIgnorePatterns: [
-      '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$',
+      '[/\\\\]node_modules[/\\\\](?!redux-demon).+\\.(js|jsx|ts|tsx)$',
       '^.+\\.module\\.(css|sass|scss)$',
     ],
     modulePaths: modules.additionalModulePaths || [],
     moduleNameMapper: {
       '^react-native$': 'react-native-web',
       '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
+      '^~customize$': path.join(paths.appSrc, '/customize'),
+      '^~/(.+)': path.join(paths.appSrc, '/$1'),
+      '^!!css-object-loader!~/(.+)/variables.css$': path.join(paths.appSrc, '/$1/variables.css'),
     },
     moduleFileExtensions: [...paths.moduleFileExtensions, 'node'].filter(
       ext => !ext.includes('mjs')
