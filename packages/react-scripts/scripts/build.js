@@ -48,14 +48,6 @@ const measureFileSizesBeforeBuild =
 const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
 const useYarn = fs.existsSync(paths.yarnLockFile);
 
-// Change customize alias for oem
-const oem = require('../config/oem');
-config.resolve.alias['~customize'] = path.join(
-  paths.appSrc,
-  'customize',
-  oem.customizeEntry
-);
-
 // These sizes are pretty large. We'll warn for bundles exceeding them.
 const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
 const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024;
@@ -69,6 +61,14 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 
 // Generate configuration
 const config = configFactory('production');
+
+// Change customize alias for oem
+const oem = require('../config/oem');
+config.resolve.alias['~customize'] = path.join(
+  paths.appSrc,
+  'customize',
+  oem.customizeEntry
+);
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
