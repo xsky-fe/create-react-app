@@ -28,8 +28,8 @@ module.exports = (resolve, rootDir, isEjecting) => {
 
     setupFiles: [
       isEjecting
-        ? 'react-app-polyfill/jsdom'
-        : require.resolve('react-app-polyfill/jsdom'),
+        ? 'react-app-polyfill-wizard/jsdom'
+        : require.resolve('react-app-polyfill-wizard/jsdom'),
     ],
 
     setupFilesAfterEnv: setupTestsFile ? [setupTestsFile] : [],
