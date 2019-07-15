@@ -559,11 +559,11 @@ module.exports = function(webpackEnv) {
           from: path.join(paths.appAsset, 'javascripts/browser-ua.js'),
           to: path.join(paths.appBuild, 'static/js/browser-ua.js'),
         },
+        {
+          from: path.join(paths.appAsset, 'browser'),
+          to: path.join(paths.appBuild, 'static/browser'),
+        },
       ]),
-      {
-        from: path.join(paths.appAsset, 'browser'),
-        to: path.join(paths.appBuild, 'static/browser'),
-      },
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
