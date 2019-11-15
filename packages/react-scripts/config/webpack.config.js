@@ -349,6 +349,7 @@ module.exports = function(webpackEnv) {
             },
           ],
           include: paths.appSrc,
+          exclude: `${paths.appSrc}/openapi/sdk/`,
         },
         {
           // "oneOf" will traverse all following loaders until one will
